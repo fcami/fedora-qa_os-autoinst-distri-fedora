@@ -1,0 +1,10 @@
+#!/bin/perl
+
+use JSON;
+
+my $infile = shift @ARGV;
+my $outfile = shift @ARGV;
+my $info = do $infile;
+$info = JSON->new->relaxed->pretty->encode($info);
+open(my $outfh, '>', $outfile);
+print $outfh $info;
