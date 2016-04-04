@@ -47,11 +47,13 @@ def prep_kickstarts(indir, outdir):
     if not tests:
         raise ValueError("No tests found!")
     for test in tests:
+        # read in the .ks.in file
         with open('{0}/{1}.ks.in'.format(indir, test), 'r') as ksinfh:
             kstext = ksinfh.read()
-        ksout = "{0}.ks".format(test)
         for (orig, repl) in SUBSTS:
             kstext = kstext.replace(orig, repl)
+        # write out the processed .ks
+        ksout = "{0}.ks".format(test)
         with open('{0}/{1}'.format(outdir, ksout), 'w') as ksoutfh:
             ksoutfh.write(kstext)
 
@@ -73,8 +75,8 @@ def merge_templates(indir, baseurl, tempfile, outfile):
         outfh.write(json.dumps(templates, sort_keys=True, indent=4,
                                separators=(',', ': ')))
 
-def _get_disk_settings(test):
-    """Given text of a kickstart_tests test (.sh file) as test, return
+def _get_settings_disk(sh):
+    """Given text of a kickstart_tests test (.sh file) as sh, return
     a list of appropriate openQA settings dicts for hard disks.
     """
     # most prepare_disks just create empty disks of a given size in
@@ -85,11 +87,11 @@ def _get_disk_settings(test):
     # create multiple clean disk images with different sizes.
     settings = []
     simpre = re.compile(r'qemu-img create -q -f qcow2 \$\{(tmp|disk)dir\}/disk-.\.img \d+G')
-    numdisks = len(simpre.findall(test))
+    numdisks = len(simpre.findall(sh))
 
     # the one tricky case that exists so far is the driverdisk case.
     # it gets created elsewhere. here we just point to it.
-    if 'mkdud.py' in test:
+    if 'mkdud.py' in sh:
         numdisks += 1
         settings.append({'key': 'HDD_{0}'.format(str(numdisks)), 'value': "driverdisk.img"})
 
@@ -98,26 +100,65 @@ def _get_disk_settings(test):
 
     return settings
 
+def _get_settings_postinstall(sh):
+    """Given text of a kickstart_tests test (.sh file) as sh, return
+    a list of appropriate openQA settings dict for post-install test
+    settings (currently a single-item list, but we're future-proofing
+    here).
+    """
+    # just one test checks for RESULT in /home instead of /root
+    if '/home/RESULT' in sh:
+        return [{'key': 'POSTINSTALL', 'value': 'kstest_home'}]
+    else:
+        return [{'key': 'POSTINSTALL', 'value': 'kstest_root'}]
+
+def _get_settings_keyboard(ksin):
+    """Given text of a kickstart_tests .ks.in file as ksin, return
+    a list of appropriate openQA settings dict for keyboard test
+    settings (currently a single-item list, but we're future-proofing
+    here).
+    """
+    # if the kickstart sets a keyboard layout, we set VNCKB to the
+    # same layout. This tells openQA to run qemu with '-k (layout)',
+    # which makes it use that layout for converting keysyms received
+    # via VNC to keycodes which are passed on to the guest OS, which
+    # converts them back into keysyms. Basically if we want to set a
+    # non-US layout in the guest and have 'type_string qwerty' still
+    # type 'qwerty' and not 'qwertz' or 'azert' or something, this is
+    # how we do that.
+    match = re.search(r'--vckeymap (\S+)', ksin)
+    if match:
+        return [{'key': 'VNCKB', 'value': match.group(1)}]
+    else:
+        return []
+
 def create_testsuite(test, path, baseurl):
     """Create an openQA 'test suite' for a given kickstart_test. test
     is the test name, path is the directory the test files are in.
     """
-    with open('{0}/{1}.sh'.format(path, test), 'r') as testfh:
-        sh = testfh.read()
-    with open('{0}/{1}.ks.in'.format(path, test), 'r') as ksfh:
-        ks = ksfh.read()
-    settings = _get_disk_settings(sh)
-    settings.append({'key': 'KICKSTART', 'value': '1'})
-    # just one test checks for RESULT in /home instead of /root
-    if '/home/RESULT' in sh:
-        settings.append({'key': 'POSTINSTALL', 'value': 'kstest_home'})
-    else:
-        settings.append({'key': 'POSTINSTALL', 'value': 'kstest_root'})
-    # for some goddamn reason there are two different root passwords.
-    rootpatt = re.compile(r'rootpw (.+)')
-    settings.append({'key': 'ROOT_PASSWORD', 'value': rootpatt.search(ks).group(1)})
+    # duh. these are all kickstart tests.
+    settings = [{'key': 'KICKSTART', 'value': '1'}]
+
+    # get text of .sh and .ks.in files
+    with open('{0}/{1}.sh'.format(path, test), 'r') as shfh:
+        sh = shfh.read()
+    with open('{0}/{1}.ks.in'.format(path, test), 'r') as ksinfh:
+        ksin = ksinfh.read()
+
+    # call all the functions for getting different settings.
+    settings.extend(_get_settings_disk(sh))
+    settings.extend(_get_settings_postinstall(sh))
+    settings.extend(_get_settings_keyboard(ksin))
+
+    # do some very simple ones ourselves (to avoid this function
+    # growing too much, the rule is that if it needs more than one
+    # line, split it out).
+
+    # root password. for now we assume there is one.
+    settings.append({'key': 'ROOT_PASSWORD', 'value': re.search(r'rootpw (.+)', ksin).group(1)})
+    # kickstart URL
     settings.append({'key': 'GRUB', 'value': "inst.ks={0}/{1}.ks".format(baseurl.strip('/'), test)})
-    # we never want to do a user login for these.
+    # we never want to do a user login for these
     settings.append({'key': 'USER_LOGIN', 'value': "false"})
     return {'name': "kstest_{0}".format(test), 'settings': settings}
 
