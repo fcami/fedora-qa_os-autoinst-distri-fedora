@@ -5,6 +5,10 @@ import json
 import logging
 import os
 import re
+import shutil
+import subprocess
+import sys
+import warnings
 
 SKIPS = [
     # we haven't really figured out how to do NFS in openQA yet
@@ -13,18 +17,14 @@ SKIPS = [
     'liveimg',
     # i'll figure this one out later
     'basic-ostree',
+    # doesn't install enough bits for the system to be bootable
+    'container',
     # FIXMEs:
-    # keyboard - changes keyboard layout, fucks with openQA's script runner
     # hostname - changes hostname, breaks 'text_console_login' needle
-    # packages-and-groups-1 - boots to GUI login
-    # encrypt-device - need to set ENCRYPT_PASSWORD, also 'kickstart insufficient'?
-]
-
-SUBSTS = [
-    ('@KSTEST_URL@', '--mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch'),
-    ('@KSTEST_FTP_URL@', 'ftp://mirror.utexas.edu/pub/fedora/linux/development/rawhide/Everything/$basearch/os/'),
-    # we need to reboot not shutdown for openQA
-    ('shutdown', 'reboot')
+    # raid-1 - only works on Rawhide (not 24)
+    # default-fstype, reqpart - trip up on xfs vs. ext4 with Server image
+    # driverdisk-disk - I didn't hook up image generation at all yet
+    # proxy-cmdline, proxy-auth - require generation of some test repos
 ]
 
 def _find_tests(dir):
@@ -38,36 +38,105 @@ def _find_tests(dir):
     # strip .ks.in
     return [ksin.replace('.ks.in', '') for ksin in ksins]
 
-def prep_kickstarts(indir, outdir):
-    """Produce kickstarts in 'outdir' from .ks.in files in 'indir'.
+def _get_texts(path, test):
+    """Return the text of the .ks.in and .sh files."""
+    # get text of .sh and .ks.in files
+    with open('{0}/{1}.sh'.format(path, test), 'r') as shfh:
+        sh = shfh.read()
+    with open('{0}/{1}.ks.in'.format(path, test), 'r') as ksinfh:
+        ksin = ksinfh.read()
+    return (sh, ksin)
+
+def _kickstart_substitutions(ksin, ksurl, httprepo, nfsrepo, kstesturl=None, kstestftpurl=None):
+    """Do the various substitutions necessary on .ks.in files. ksin is
+    the text of the file. 'ksurl' is the URL to the path where the
+    produced kickstarts will be available via HTTP; this is needed for
+    the 'ks-include' test which tests including another kickstart
+    file. 'kstesturl' is the text to replace @KSTEST_URL@ with - it
+    should be the '--mirrorlist=(url)' or '--url=(url)' component of a
+    kickstart 'repo' line. kstestftpurl is, similarly, the replacement
+    text for @KSTEST_FTP_URL@. If not set, defaults are used.
     """
+    if not kstesturl:
+        kstesturl = '--mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch'
+    if not kstestftpurl:
+        kstestftpurl = 'ftp://mirror.utexas.edu/pub/fedora/linux/development/rawhide/Everything/$basearch/os/'
+
+    ksin = ksin.replace('@KSTEST_URL@', kstesturl)
+    ksin = ksin.replace('@KSTEST_FTP_URL@', kstestftpurl)
+    ksin = ksin.replace('@KSTEST_HTTP_ADDON_REPO@', httprepo)
+    # this has two different placeholders, for some reason...
+    ksin = ksin.replace('HTTP-ADDON-REPO', httprepo)
+    ksin = ksin.replace('@KSTEST_NFS_ADDON_REPO@', nfsrepo)
+    # we always want to reboot, not shutdown
+    ksin = ksin.replace('shutdown', 'reboot')
+
+    # handle includes. note this means we're testing a slightly
+    # different path to the kickstart-tests runner: it tests
+    # inclusion of a local file while we test inclusion of an HTTP
+    # served file.
+    ksin = ksin.replace('KS-TEST-INCLUDE', "{0}/{1}".format(ksurl, 'ks-include-post.ks'))
+    return ksin
+
+def prep_kickstarts(indir, ksurl, httprepo, nfsrepo, outdir, kstesturl=None, kstestftpurl=None):
+    """Produce kickstarts in 'outdir' from .ks.in files in 'indir'.
+    'ksurl' is the URL to the path where the produced kickstarts
+    will be available via HTTP; this is needed for the 'ks-include'
+    test which tests including another kickstart file. 'kstesturl'
+    is the text to replace @KSTEST_URL@ with - it should be the
+    '--mirrorlist=(url)' or '--url=(url)' component of a kickstart
+    'repo' line. kstestftpurl is, similarly, the replacement text
+    for @KSTEST_FTP_URL@. If not set, defaults are used.
+    """
+    if not kstesturl:
+        kstesturl = '--mirrorlist=https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-$releasever&arch=$basearch'
+    if not kstestftpurl:
+        kstestftpurl = 'ftp://mirror.utexas.edu/pub/fedora/linux/development/rawhide/Everything/$basearch/os/'
     if not os.path.isdir(outdir):
         raise ValueError("Output directory {0} does not exist!".format(outdir))
+    # probably safest
+    indir = os.path.abspath(indir)
+
+    # build Makefile-driven .ks.ins
+    ret = subprocess.call(('make', '-s'), cwd=indir)
     tests = _find_tests(indir)
     if not tests:
         raise ValueError("No tests found!")
+
     for test in tests:
-        # read in the .ks.in file
-        with open('{0}/{1}.ks.in'.format(indir, test), 'r') as ksinfh:
-            kstext = ksinfh.read()
-        for (orig, repl) in SUBSTS:
-            kstext = kstext.replace(orig, repl)
+        (sh, ksin) = _get_texts(indir, test)
+        # do standard substitutions
+        ksin = _kickstart_substitutions(
+            ksin, ksurl, httprepo, nfsrepo, kstesturl=kstesturl, kstestftpurl=kstestftpurl)
+
+        # replace '(non-alpha)sd(alpha)(non-alpha)' with '(non-alpha)
+        # vd(alpha)(non-alpha)' (sda -> vda etc). This is because
+        # openQA's default way of attaching disks results in them
+        # being vdX while the kickstart-tests runner's way makes them
+        # sdX. we could maybe harmonize those somehow instead of doing
+        # this.
+        ksin = re.sub(r'([^a-zA-Z])s(d[a-z][^a-zA-Z])', r"\1v\2", ksin)
+
         # write out the processed .ks
         ksout = "{0}.ks".format(test)
         with open('{0}/{1}'.format(outdir, ksout), 'w') as ksoutfh:
-            ksoutfh.write(kstext)
+            ksoutfh.write(ksin)
 
-def merge_templates(indir, baseurl, tempfile, outfile):
+    # copy the 'include' test kickstart straight over.
+    shutil.copy('{0}/{1}'.format(indir, 'ks-include-post.ks'),
+                '{0}/{1}'.format(outdir, 'ks-include-post.ks'))
+
+def merge_templates(indir, ksurl, tempfile, outfile):
     """Produce openQA test suites and job templates for all tests in
     indir, merge them with the existing openQA templates file
     'tempfile', and write the combined templates file as 'outfile'.
-    'baseurl' is the URL to the path where the kickstart files for
+    'ksurl' is the URL to the path where the kickstart files for
     the tests can be found.
     """
     tests = _find_tests(indir)
     if not tests:
         raise ValueError("No tests found!")
-    testsuites = [create_testsuite(test, indir, baseurl) for test in tests]
+    testsuites = [create_testsuite(test, indir, ksurl) for test in tests]
     with open(tempfile, 'r') as tempfh:
         templates = json.loads(tempfh.read())
     templates = merge_testsuites(templates, testsuites)
@@ -118,21 +187,63 @@ def _get_settings_keyboard(ksin):
     settings (currently a single-item list, but we're future-proofing
     here).
     """
-    # if the kickstart sets a keyboard layout, we set VNCKB to the
-    # same layout. This tells openQA to run qemu with '-k (layout)',
-    # which makes it use that layout for converting keysyms received
-    # via VNC to keycodes which are passed on to the guest OS, which
-    # converts them back into keysyms. Basically if we want to set a
-    # non-US layout in the guest and have 'type_string qwerty' still
-    # type 'qwerty' and not 'qwertz' or 'azert' or something, this is
-    # how we do that.
+    # if the kickstart sets a keyboard layout, we set the LOADKEYS
+    # var to tell openQA to do 'loadkeys us' after login and LOGIN_
+    # KEYMAP to tell it to use the specified keymap for logging in
+    # and running loadkeys.
     match = re.search(r'--vckeymap (\S+)', ksin)
     if match:
-        return [{'key': 'VNCKB', 'value': match.group(1)}]
+        return [
+            {'key': 'LOADKEYS', 'value': 1},
+            {'key': 'LOGIN_KEYMAP', 'value': match.group(1)},
+        ]
     else:
         return []
 
-def create_testsuite(test, path, baseurl):
+def _get_settings_encrypt(ksin):
+    """Given text of a kickstart_tests .ks.in file as ksin, return
+    a list of appropriate openQA settings dict for disk encryption
+    settings (currently a single-item list, but we're future-proofing
+    here).
+    """
+    # the (?:) are non-capturing groups. We only care about the second
+    # group. The fun at the end is to capture a passphrase if it's
+    # inside quotes, and to stop matching when we reach either a white
+    # space character or the end of the line.
+    match = re.search(r"(?:logvol|part).*--passphrase='?(\S+?)'?(?:\s|$)", ksin)
+    if match:
+        return [{'key': 'ENCRYPT_PASSWORD', 'value': match.group(1)}]
+    else:
+        return []
+
+def _get_settings_boot(sh, test, ksurl):
+    """Given text of a kickstart_tests test (.sh file) as sh, the test
+    name as test and the kickstar base URL as ksurl, return a list
+    of appropriate openQA settings related to the bootloader. Usually
+    we just set inst.ks, but kickstart-tests has capacity for setting
+    other params, we must handle that; used by proxy-cmdline for e.g.
+    """
+    value = "inst.ks={0}/{1}.ks".format(ksurl.strip('/'), test)
+    # ok, this is an awful excuse for parsing. sorry. It does handle
+    # comments! it'll break if the function is not just a single line
+    # of args, though.
+    lines = sh.splitlines()
+    args = []
+    for (num, line) in enumerate(lines):
+        # start of the 'kernel_args' function that prints the args
+        if line.startswith('kernel_args()'):
+            # take the next line (we assume that's 'echo arg1 arg2...')
+            args = lines[num+1].strip().split()
+    if args:
+        # split the line and ditch some args we don't want to take
+        args = [arg for arg in args if arg not in ('echo', 'vnc')]
+        # stick the inst.ks arg on the end of the list, and...
+        args.append(value)
+        # ...join it back together
+        value = ' '.join(args)
+    return [{'key': 'GRUB', 'value': value}]
+
+def create_testsuite(test, path, ksurl):
     """Create an openQA 'test suite' for a given kickstart_test. test
     is the test name, path is the directory the test files are in.
     """
@@ -140,26 +251,29 @@ def create_testsuite(test, path, baseurl):
     settings = [{'key': 'KICKSTART', 'value': '1'}]
 
     # get text of .sh and .ks.in files
-    with open('{0}/{1}.sh'.format(path, test), 'r') as shfh:
-        sh = shfh.read()
-    with open('{0}/{1}.ks.in'.format(path, test), 'r') as ksinfh:
-        ksin = ksinfh.read()
+    (sh, ksin) = _get_texts(path, test)
 
     # call all the functions for getting different settings.
     settings.extend(_get_settings_disk(sh))
     settings.extend(_get_settings_postinstall(sh))
     settings.extend(_get_settings_keyboard(ksin))
+    settings.extend(_get_settings_encrypt(ksin))
+    settings.extend(_get_settings_boot(sh, test, ksurl))
 
     # do some very simple ones ourselves (to avoid this function
-    # growing too much, the rule is that if it needs more than one
-    # line, split it out).
+    # growing too much, the rule is that if it needs more than two
+    # lines, split it out).
 
     # root password. for now we assume there is one.
     settings.append({'key': 'ROOT_PASSWORD', 'value': re.search(r'rootpw (.+)', ksin).group(1)})
-    # kickstart URL
-    settings.append({'key': 'GRUB', 'value': "inst.ks={0}/{1}.ks".format(baseurl.strip('/'), test)})
     # we never want to do a user login for these
     settings.append({'key': 'USER_LOGIN', 'value': "false"})
+    # these install xfce so they boot to lightdm, force console login
+    if test in ('groups-and-envs-2', 'packages-and-groups-1'):
+        settings.append({'key': 'FORCE_CONSOLE_LOGIN', 'value': "1"})
+    # we have to do an ugly success check workaround for these
+    if test in ('reqpart', 'default-fstype'):
+        settings.append({'key': 'KSTEST_SERVER_FSTYPE', 'value': "1"})
     return {'name': "kstest_{0}".format(test), 'settings': settings}
 
 def merge_testsuites(templates, testsuites, machine='64bit', arch='x86_64',
@@ -208,8 +322,15 @@ def cmd_kickstarts(args):
     """kickstarts subcommand function: produce kickstarts from .ks.in
     files.
     """
+    if args.mirrorlist:
+        kstesturl = '--mirrorlist={0}'.format(args.mirrorlist)
+    elif args.http:
+        kstesturl = '--url={0}'.format(args.http)
+    else:
+        kstesturl = None
     try:
-        prep_kickstarts(args.indir, args.outdir)
+        prep_kickstarts(args.indir, args.ksurl, args.httprepo, args.nfsrepo, args.outdir,
+                        kstesturl, args.ftp)
     except ValueError as err:
         sys.exit(err)
 
@@ -218,7 +339,7 @@ def cmd_templates(args):
     job templates and merge into a templates file.
     """
     try:
-        merge_templates(args.indir, args.baseurl, args.tempfile, args.outfile)
+        merge_templates(args.indir, args.ksurl, args.tempfile, args.outfile)
     except ValueError as err:
         sys.exit(err)
 
@@ -248,7 +369,28 @@ def parse_args():
     parser_kickstarts.add_argument(
         'indir', help="Input directory (containing .ks.in files)")
     parser_kickstarts.add_argument(
+        'ksurl', help="URL to path where generated .ks files will be "
+        "available")
+    parser_kickstarts.add_argument(
+        'httprepo', help="URL for the HTTP repository required for additional "
+        "repository tests (created with make-addon-pkgs.py). MUST BE HTTP "
+        "not HTTPS for proxy tests to work")
+    parser_kickstarts.add_argument(
+        'nfsrepo', help="URL for the NFS repository required for additional "
+        "repository tests (created with make-addon-pkgs.py)")
+    parser_kickstarts.add_argument(
         'outdir', help="Output directory (where .ks files are written")
+    parser_kickstarts.add_argument(
+        '--mirrorlist', '-m', help="Mirror list URL to use as the base repo "
+        "for HTTP repo tests, instead of the default (the official mirror "
+        "list)")
+    parser_kickstarts.add_argument(
+        '--http', help="Direct mirror URL to use as the base repo for "
+        "HTTP repo tests, instead of the default (the official mirror "
+        "list)")
+    parser_kickstarts.add_argument(
+        '--ftp', help="FTP URL to use as the base repo for FTP repo "
+        "tests, instead of the default (a server in Texas, USA)")
     parser_kickstarts.set_defaults(func=cmd_kickstarts)
 
     parser_templates = subparsers.add_parser(
@@ -258,7 +400,7 @@ def parse_args():
     parser_templates.add_argument(
         'indir', help="Input directory (containing .ks.in and .sh files)")
     parser_templates.add_argument(
-        'baseurl', help="URL to a directory containing .ks files (as "
+        'ksurl', help="URL to a directory containing .ks files (as "
         "produced by 'kickstarts' subcommand)")
     parser_templates.add_argument(
         'tempfile', help="Path to openQA templates file (must be JSON "
@@ -272,6 +414,12 @@ def parse_args():
 def main():
     """Main loop."""
     try:
+        # check for needed commands
+        for (cmd, pkg) in (('createrepo_c', 'createrepo_c'),
+                           ('make', 'make')):
+            if not shutil.which(cmd):
+                sys.exit("Required command {0} not found! Please install it (try `dnf install "
+                        "{1}`)".format(cmd, pkg))
         args = parse_args()
         loglevel = getattr(
             logging, args.loglevel.upper(), logging.INFO)

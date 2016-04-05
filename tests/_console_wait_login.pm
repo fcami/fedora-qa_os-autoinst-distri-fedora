@@ -2,22 +2,45 @@ use base "fedorabase";
 use strict;
 use testapi;
 
+sub _map_string {
+    my $self = shift;
+    my $string = shift;
+    if (get_var("LOGIN_KEYMAP")) {
+        $string = $self->keymap_string($string, get_var("LOGIN_KEYMAP"));
+    }
+    return $string;
+}
+
 sub run {
     my $self = shift;
 
-    # If KICKSTART is set, then the wait_time needs to
-    #  consider the install time
-    my $wait_time = get_var("KICKSTART") ? 1800 : 300;
+    # If KICKSTART is set and ENCRYPT_PASSWORD is not, then the
+    # wait_time needs to consider the install time
+    my $wait_time = (get_var("KICKSTART") && !(get_var("ENCRYPT_PASSWORD"))) ? 1800 : 300;
 
-    # Reboot and wait for the text login
+    # FORCE_CONSOLE_LOGIN tells us to wait for a graphical login
+    # then switch to a console
+    if (get_var("FORCE_CONSOLE_LOGIN")) {
+        assert_screen "graphical_login", $wait_time;
+        $wait_time = 20;
+        send_key "ctrl-alt-f3";
+    }
+
+    # Wait for the text login
     assert_screen "text_console_login", $wait_time;
 
     # do user login unless USER_LOGIN is set to string 'false'
-    unless (get_var("USER_LOGIN") eq "false") {
-        $self->console_login(user=>get_var("USER_LOGIN", "test"), password=>get_var("USER_PASSWORD", "weakpassword"));
+    my $user = get_var("USER_LOGIN", "test");
+    unless ($user eq "false") {
+        my $userpass = get_var("USER_PASSWORD", "weakpassword");
+        $self->console_login(user=>$self->_map_string($user), password=>$self->_map_string($userpass));
     }
     if (get_var("ROOT_PASSWORD")) {
-        $self->console_login(user=>"root", password=>get_var("ROOT_PASSWORD"));
+        $self->console_login(user=>$self->_map_string("root"), password=>$self->_map_string(get_var("ROOT_PASSWORD")));
+    }
+    # if requested, load US keymap.
+    if (get_var("LOADKEYS")) {
+        type_string $self->_map_string("loadkeys us\n");
     }
 }
 

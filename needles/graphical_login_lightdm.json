@@ -1,0 +1,18 @@
+{
+    "area": [
+        {
+            "height": 83,
+            "type": "match",
+            "width": 69,
+            "xpos": 368,
+            "ypos": 324
+        }
+    ],
+    "properties": [],
+    "tags": [
+        "graphical_login",
+        "DESKTOP-xfce",
+        "DESKTOP-lxde",
+        "LANGUAGE-english"
+    ]
+}

@@ -94,6 +94,27 @@ sub get_milestone {
     return '';
 }
 
+sub keymap_string {
+    # sometimes we want to set the guest OS keyboard layout to czech.
+    # this messes up openQA 'send_key' and 'type_string'. in theory we
+    # can fix this with VNCKB (which sets the '-k' arg for qemu) but
+    # that doesn't really work as the guest OS keymap will be US on
+    # the boot screen, early in anaconda, etc. so instead we have this
+    # awful thing, which parses strings so when you type *most* things
+    # with the guest OS keymap set to cz, they'll turn out right. This
+    # is ugly and shouldn't be relied on too hard, the best thing to
+    # do is use it only to log in and run 'loadkeys us'. Written to be
+    # extensible to other keymaps, for now I've only done cz.
+    my $self = shift;
+    my $string = shift;
+    my $keymap = shift;
+    if ($keymap eq 'cz') {
+        # FIXME: pipes are altgr+w, which is nothing in US...problem.
+        $string =~ tr,yz\-=?":'_;,zy/\-<:>|?`,;
+    }
+    return $string;
+}
+
 1;
 
 # vim: set sw=4 et:

@@ -4,7 +4,11 @@ use testapi;
 
 sub run {
     # decrypt disks during boot
-    assert_screen "boot_enter_passphrase", 300; #
+
+    # If KICKSTART is set, then the wait_time needs to
+    #  consider the install time
+    my $wait_time = get_var("KICKSTART") ? 1800 : 300;
+    assert_screen "boot_enter_passphrase", $wait_time;
     type_string get_var("ENCRYPT_PASSWORD");
     send_key "ret";
 }
