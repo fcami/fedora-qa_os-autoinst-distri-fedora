@@ -10,6 +10,11 @@ import subprocess
 import sys
 import warnings
 
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    import pykickstart.version
+    import pykickstart.parser
+
 SKIPS = [
     # we haven't really figured out how to do NFS in openQA yet
     'nfs-repo-and-addon',
@@ -97,17 +102,25 @@ def prep_kickstarts(indir, ksurl, httprepo, nfsrepo, outdir, kstesturl=None, kst
     # probably safest
     indir = os.path.abspath(indir)
 
-    # build Makefile-driven .ks.ins
-    ret = subprocess.call(('make', '-s'), cwd=indir)
+    # build proxy-common.ks
+    # FIXME: we should do something more like run_kickstart_tests here
+    # but exclude install.img as it doesn't work
+    subprocess.check_call(('make', '-s', '-f', 'Makefile.prereqs', 'proxy-common.ks'),
+                          cwd="{0}/{1}".format(indir, 'scripts'))
     tests = _find_tests(indir)
     if not tests:
         raise ValueError("No tests found!")
 
     for test in tests:
         (sh, ksin) = _get_texts(indir, test)
+        # HACK: this test can't handle https repo
+        if test == 'proxy-auth':
+            _kstesturl = kstesturl.replace('https://', 'http://')
+        else:
+            _kstesturl = kstesturl
         # do standard substitutions
         ksin = _kickstart_substitutions(
-            ksin, ksurl, httprepo, nfsrepo, kstesturl=kstesturl, kstestftpurl=kstestftpurl)
+            ksin, ksurl, httprepo, nfsrepo, kstesturl=_kstesturl, kstestftpurl=kstestftpurl)
 
         # replace '(non-alpha)sd(alpha)(non-alpha)' with '(non-alpha)
         # vd(alpha)(non-alpha)' (sda -> vda etc). This is because
@@ -116,6 +129,21 @@ def prep_kickstarts(indir, ksurl, httprepo, nfsrepo, outdir, kstesturl=None, kst
         # sdX. we could maybe harmonize those somehow instead of doing
         # this.
         ksin = re.sub(r'([^a-zA-Z])s(d[a-z][^a-zA-Z])', r"\1v\2", ksin)
+
+        # flatten the kickstart (some use includes). this code copies
+        # ksflatten quite closely.
+        if 'ksflatten' in sh:
+            # includes may be relative; we have to do this from indir
+            cwd = os.getcwd()
+            os.chdir(indir)
+            # good grief, pykickstart is chatty
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                handler = pykickstart.version.makeVersion()
+                parser = pykickstart.parser.KickstartParser(handler)
+                parser.readKickstartFromString(ksin)
+                ksin = str(parser.handler)
+            os.chdir(cwd)
 
         # write out the processed .ks
         ksout = "{0}.ks".format(test)
