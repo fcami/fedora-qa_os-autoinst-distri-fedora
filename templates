@@ -8,6 +8,94 @@
   JobTemplates => [
                     {
                       machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_1" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_2" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_3" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_4" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_5" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_6" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_7" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 11,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "key-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "key_test_8" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
                       prio       => 10,
                       product    => {
                                       arch    => "x86_64",
@@ -1348,6 +1436,17 @@
                     {
                       arch      => "x86_64",
                       distri    => "fedora",
+                      flavor    => "key-test",
+                      name      => "",
+                      settings  => [
+                        { key => "LIVE", value => "1" },
+                        { key => "DESKTOP", value => "gnome" }
+                                   ],
+                      version   => "*",
+                    },
+                    {
+                      arch      => "x86_64",
+                      distri    => "fedora",
                       flavor    => "KDE-live-iso",
                       name      => "",
                       settings  => [
@@ -2076,6 +2175,54 @@
                         { key => "INSTALL_UNLOCK", value => "support_ready" },
                         { key => "NICTYPE", value => "tap" },
                         { key => "WORKER_CLASS", value => "tap" },
+                      ],
+                    },
+                    {
+                      name => "key_test_1",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_2",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_3",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_4",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_5",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_6",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_7",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
+                      ],
+                    },
+                    {
+                      name => "key_test_8",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "key_test" },
                       ],
                     },
                   ],
