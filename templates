@@ -12,6 +12,94 @@
                       product    => {
                                       arch    => "x86_64",
                                       distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_1" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_2" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_3" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_4" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_5" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_6" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_7" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "bgo771127-test",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "bgo771127_test_8" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      prio       => 10,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
                                       flavor  => "Workstation-live-iso",
                                       version => "*",
                                     },
@@ -1270,6 +1358,15 @@
                     {
                       arch      => "x86_64",
                       distri    => "fedora",
+                      flavor    => "bgo771127-test",
+                      name      => "",
+                      settings  => [
+                                   ],
+                      version   => "*",
+                    },
+                    {
+                      arch      => "x86_64",
+                      distri    => "fedora",
                       flavor    => "universal",
                       name      => "",
                       settings  => [
@@ -2056,6 +2153,54 @@
                         { key => "INSTALL_UNLOCK", value => "support_ready" },
                         { key => "NICTYPE", value => "tap" },
                         { key => "WORKER_CLASS", value => "tap" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_1",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_2",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_3",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_4",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_5",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_6",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_7",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
+                      ],
+                    },
+                    {
+                      name => "bgo771127_test_8",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "bgo771127_test" },
                       ],
                     },
                   ],

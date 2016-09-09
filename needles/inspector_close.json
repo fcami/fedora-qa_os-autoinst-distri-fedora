@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 924,
+      "ypos": 17,
+      "width": 25,
+      "height": 20,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "inspector_close"
+  ],
+  "properties": []
+}

@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "inspector_visual"
+  ],
+  "properties": [],
+  "area": [
+    {
+      "xpos": 621,
+      "ypos": 19,
+      "width": 49,
+      "height": 15,
+      "type": "match"
+    }
+  ]
+}

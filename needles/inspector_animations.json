@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "inspector_animations"
+  ],
+  "properties": [],
+  "area": [
+    {
+      "xpos": 289,
+      "ypos": 499,
+      "width": 79,
+      "height": 36,
+      "type": "match"
+    }
+  ]
+}
