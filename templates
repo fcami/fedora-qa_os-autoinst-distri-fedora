@@ -12,10 +12,10 @@
                       product    => {
                                       arch    => "x86_64",
                                       distri  => "fedora",
-                                      flavor  => "key-test",
+                                      flavor  => "dep-test",
                                       version => "*",
                                     },
-                      test_suite => { name => "key_test_1" },
+                      test_suite => { name => "dep_test_parent" },
                     },
                     {
                       machine    => { name => "64bit" },
@@ -23,10 +23,10 @@
                       product    => {
                                       arch    => "x86_64",
                                       distri  => "fedora",
-                                      flavor  => "key-test",
+                                      flavor  => "dep-test",
                                       version => "*",
                                     },
-                      test_suite => { name => "key_test_2" },
+                      test_suite => { name => "dep_test_child_1" },
                     },
                     {
                       machine    => { name => "64bit" },
@@ -34,10 +34,10 @@
                       product    => {
                                       arch    => "x86_64",
                                       distri  => "fedora",
-                                      flavor  => "key-test",
+                                      flavor  => "dep-test",
                                       version => "*",
                                     },
-                      test_suite => { name => "key_test_3" },
+                      test_suite => { name => "dep_test_child_2" },
                     },
                     {
                       machine    => { name => "64bit" },
@@ -45,54 +45,10 @@
                       product    => {
                                       arch    => "x86_64",
                                       distri  => "fedora",
-                                      flavor  => "key-test",
+                                      flavor  => "dep-test",
                                       version => "*",
                                     },
-                      test_suite => { name => "key_test_4" },
-                    },
-                    {
-                      machine    => { name => "64bit" },
-                      prio       => 11,
-                      product    => {
-                                      arch    => "x86_64",
-                                      distri  => "fedora",
-                                      flavor  => "key-test",
-                                      version => "*",
-                                    },
-                      test_suite => { name => "key_test_5" },
-                    },
-                    {
-                      machine    => { name => "64bit" },
-                      prio       => 11,
-                      product    => {
-                                      arch    => "x86_64",
-                                      distri  => "fedora",
-                                      flavor  => "key-test",
-                                      version => "*",
-                                    },
-                      test_suite => { name => "key_test_6" },
-                    },
-                    {
-                      machine    => { name => "64bit" },
-                      prio       => 11,
-                      product    => {
-                                      arch    => "x86_64",
-                                      distri  => "fedora",
-                                      flavor  => "key-test",
-                                      version => "*",
-                                    },
-                      test_suite => { name => "key_test_7" },
-                    },
-                    {
-                      machine    => { name => "64bit" },
-                      prio       => 11,
-                      product    => {
-                                      arch    => "x86_64",
-                                      distri  => "fedora",
-                                      flavor  => "key-test",
-                                      version => "*",
-                                    },
-                      test_suite => { name => "key_test_8" },
+                      test_suite => { name => "dep_test_child_3" },
                     },
                     {
                       machine    => { name => "64bit" },
@@ -1436,7 +1392,7 @@
                     {
                       arch      => "x86_64",
                       distri    => "fedora",
-                      flavor    => "key-test",
+                      flavor    => "dep-test",
                       name      => "",
                       settings  => [
                         { key => "LIVE", value => "1" },
@@ -2178,51 +2134,30 @@
                       ],
                     },
                     {
-                      name => "key_test_1",
+                      name => "dep_test_parent",
                       settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
+                        { key => "ENTRYPOINT", value => "dep_test" },
                       ],
                     },
                     {
-                      name => "key_test_2",
+                      name => "dep_test_child_1",
                       settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
+                        { key => "ENTRYPOINT", value => "dep_test" },
+                        { key => "START_AFTER_TEST", value => "dep_test_parent" },
                       ],
                     },
                     {
-                      name => "key_test_3",
+                      name => "dep_test_child_2",
                       settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
+                        { key => "ENTRYPOINT", value => "dep_test" },
+                        { key => "START_AFTER_TEST", value => "dep_test_parent" },
                       ],
                     },
                     {
-                      name => "key_test_4",
+                      name => "dep_test_child_3",
                       settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
-                      ],
-                    },
-                    {
-                      name => "key_test_5",
-                      settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
-                      ],
-                    },
-                    {
-                      name => "key_test_6",
-                      settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
-                      ],
-                    },
-                    {
-                      name => "key_test_7",
-                      settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
-                      ],
-                    },
-                    {
-                      name => "key_test_8",
-                      settings => [
-                        { key => "ENTRYPOINT", value => "key_test" },
+                        { key => "ENTRYPOINT", value => "dep_test" },
+                        { key => "START_AFTER_TEST", value => "dep_test_parent" },
                       ],
                     },
                   ],
