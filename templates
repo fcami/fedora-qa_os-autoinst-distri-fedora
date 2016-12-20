@@ -1359,6 +1359,54 @@
                                     },
                       test_suite => { name => "install_package_set_kde" },
                     },
+                    {
+                      machine    => { name => "64bit" },
+                      group_name => "Taskotron Minion Builds",
+                      prio       => 100,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "taskotron-build-stable",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "taskotron_build_stable" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      group_name => "Taskotron Minion Builds",
+                      prio       => 100,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "taskotron-build-stable-1",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "taskotron_build_stable" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      group_name => "Taskotron Minion Builds",
+                      prio       => 100,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "taskotron-build-rawhide",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "taskotron_build_rawhide" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
+                      group_name => "Taskotron Minion Builds",
+                      prio       => 100,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "taskotron-build-branched",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "taskotron_build_branched" },
+                    },
                   ],
   Machines     => [
                     {
@@ -1549,6 +1597,42 @@
                     arch      => "arm",
                     distri    => "fedora",
                     flavor    => "Minimal-raw_xz-raw.xz",
+                    name      => "",
+                    settings  => [
+                                 ],
+                    version   => "*",
+                  },
+                  {
+                    arch      => "x86_64",
+                    distri    => "fedora",
+                    flavor    => "taskotron-build-stable",
+                    name      => "",
+                    settings  => [
+                                 ],
+                    version   => "*",
+                  },
+                  {
+                    arch      => "x86_64",
+                    distri    => "fedora",
+                    flavor    => "taskotron-build-stable-1",
+                    name      => "",
+                    settings  => [
+                                 ],
+                    version   => "*",
+                  },
+                  {
+                    arch      => "x86_64",
+                    distri    => "fedora",
+                    flavor    => "taskotron-build-rawhide",
+                    name      => "",
+                    settings  => [
+                                 ],
+                    version   => "*",
+                  },
+                  {
+                    arch      => "x86_64",
+                    distri    => "fedora",
+                    flavor    => "taskotron-build-branched",
                     name      => "",
                     settings  => [
                                  ],
@@ -2274,6 +2358,36 @@
                         { key => "INSTALL_UNLOCK", value => "support_ready" },
                         { key => "NICTYPE", value => "tap" },
                         { key => "WORKER_CLASS", value => "tap" },
+                      ],
+                    },
+                    {
+                      name => "taskotron_build_stable",
+                      settings => [
+                        { key => "KICKSTART", value => "1" },
+                        { key => "GRUB", value => "inst.ks=https://jskladan.fedorapeople.org/kickstarts/taskotron_base_images/taskotron_minion_prod.ks" },
+                        { key => "ROOT_PASSWORD", value => "fedora" },
+                        { key => "STORE_HDD_1", value => "disk_%FLAVOR%_%MACHINE%.qcow2" },
+                        { key => "USER_LOGIN", value => "false" },
+                      ],
+                    },
+                    {
+                      name => "taskotron_build_rawhide",
+                      settings => [
+                        { key => "KICKSTART", value => "1" },
+                        { key => "GRUB", value => "inst.ks=https://jskladan.fedorapeople.org/kickstarts/taskotron_base_images/taskotron_minion_prod.ks" },
+                        { key => "ROOT_PASSWORD", value => "fedora" },
+                        { key => "STORE_HDD_1", value => "disk_%FLAVOR%_%MACHINE%.qcow2" },
+                        { key => "USER_LOGIN", value => "false" },
+                      ],
+                    },
+                    {
+                      name => "taskotron_build_branched",
+                      settings => [
+                        { key => "KICKSTART", value => "1" },
+                        { key => "GRUB", value => "inst.ks=https://jskladan.fedorapeople.org/kickstarts/taskotron_base_images/taskotron_minion_prod.ks" },
+                        { key => "ROOT_PASSWORD", value => "fedora" },
+                        { key => "STORE_HDD_1", value => "disk_%FLAVOR%_%MACHINE%.qcow2" },
+                        { key => "USER_LOGIN", value => "false" },
                       ],
                     },
                   ],
