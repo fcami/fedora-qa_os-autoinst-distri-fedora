@@ -23,10 +23,22 @@ sub root_console {
 sub post_fail_hook {
     my $self = shift;
 
-    $self->root_console(tty=>6);
+    if (check_screen 'emergency_rescue', 3) {
+        my $password = get_var("ROOT_PASSWORD", "weakpassword");
+        type_string "$password\n";
+        # bring up network so we can upload logs
+        assert_script_run "dhclient";
+        script_run "systemctl status initrd-switch-root.service > /tmp/switch-root.status";
+        upload_logs "/tmp/switch-root.status";
+    }
+    else {
+        $self->root_console(tty=>6);
+    }
 
-    # We can't rely on tar being in minimal installs
-    assert_script_run "dnf -y install tar", 180;
+    # We can't rely on tar being in minimal installs, but we also can't
+    # rely on dnf always working, so try it, then check if we have tar
+    script_run "dnf -y install tar", 180;
+    assert_script_run "rpm -q tar";
 
     # Note: script_run returns the exit code, so the logic looks weird.
     # We're testing that the directory exists and contains something.
