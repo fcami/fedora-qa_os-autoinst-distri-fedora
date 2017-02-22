@@ -302,8 +302,13 @@ sub _repo_setup_compose {
 
 sub _repo_setup_updates {
     # Appropriate repo setup steps for testing a Bodhi update
-    # Check if we already ran, bail if so
-    return unless script_run "test -f /etc/yum.repos.d/advisory.repo";
+    # Check if we already ran, just re-upload the log (this is for the
+    # case where this happened in a parent job that uploaded its disk
+    # file, so the child job has the log too) if so
+    unless (script_run "test -f /etc/yum.repos.d/advisory.repo") {
+        upload_logs "/var/log/updatepkgs.txt";
+        return;
+    }
     # Use baseurl not metalink so we don't wind up timing out getting
     # metadata from a slow source...baseurl will always give us dl
     # in infra
@@ -325,10 +330,16 @@ sub _repo_setup_updates {
     }
     else {
         # bodhi client 0.9
-        # latest git python-fedora fixes bug which makes bodhi -D UPDATE_ID fail
+        # use git python-fedora for
+        # https://github.com/fedora-infra/python-fedora/pull/192
+        # until packages with that fix are pushed stable
         assert_script_run "git clone https://github.com/fedora-infra/python-fedora.git";
         assert_script_run "PYTHONPATH=python-fedora/ bodhi -D " . get_var("ADVISORY"), 300;
     }
+    # log the exact packages in the update at test time, with their
+    # source packages and epochs
+    assert_script_run 'rpm -qp *.rpm --qf "%{SOURCERPM} %{EPOCH} %{NAME}-%{VERSION}-%{RELEASE}\n" | sort -u > /var/log/updatepkgs.txt';
+    upload_logs "/var/log/updatepkgs.txt";
     # create the repo metadata
     assert_script_run "createrepo .";
     # write a repo config file
