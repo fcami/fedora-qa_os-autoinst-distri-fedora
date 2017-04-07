@@ -14,16 +14,15 @@ sub run {
     # handling may help us here if we switch to it
     console_loadkeys_us;
     # check there are no AVCs. We use ! because this returns 1
-    validate_script_output '! ausearch -m avc -ts yesterday 2>&1', sub { $_ =~ m/<no matches>/ };
+    record_soft_failure "AVCs found" if script_run 'ausearch -m avc -ts yesterday 2>&1';
     # check there are no crashes
-    validate_script_output '! coredumpctl list 2>&1', sub { $_ =~ m/No coredumps found/ };
+    record_soft_failure "crashes found" if script_run 'coredumpctl list 2>&1';
 }
 
 sub test_flags {
     # without anything - rollback to 'lastgood' snapshot if failed
     # 'fatal' - whole test suite is in danger if this fails
     # 'milestone' - after this test succeeds, update 'lastgood'
-    # 'important' - if this fails, set the overall state to 'fail'
     return {};
 }
 
