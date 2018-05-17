@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "area": [
+    {
+      "xpos": 164,
+      "ypos": 88,
+      "width": 90,
+      "height": 18,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "is_starred_dir"
+  ]
+}

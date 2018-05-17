@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "area": [
+    {
+      "xpos": 401,
+      "ypos": 313,
+      "width": 59,
+      "height": 31,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "rename_button"
+  ]
+}

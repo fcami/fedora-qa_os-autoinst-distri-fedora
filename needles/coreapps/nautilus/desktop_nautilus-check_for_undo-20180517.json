@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "check_for_undo"
+  ],
+  "area": [
+    {
+      "xpos": 528,
+      "ypos": 426,
+      "width": 155,
+      "height": 28,
+      "type": "match"
+    }
+  ]
+}

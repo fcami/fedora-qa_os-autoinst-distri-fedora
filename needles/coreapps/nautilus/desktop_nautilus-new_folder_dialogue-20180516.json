@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "new_folder_dialogue"
+  ],
+  "area": [
+    {
+      "xpos": 472,
+      "ypos": 314,
+      "width": 80,
+      "height": 17,
+      "type": "match"
+    }
+  ],
+  "properties": []
+}

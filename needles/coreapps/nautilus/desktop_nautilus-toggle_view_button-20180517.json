@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "area": [
+    {
+      "xpos": 835,
+      "ypos": 84,
+      "width": 23,
+      "height": 24,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "toggle_view_button"
+  ]
+}

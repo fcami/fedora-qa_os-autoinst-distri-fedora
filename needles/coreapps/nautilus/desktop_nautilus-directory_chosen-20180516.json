@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "directory_chosen"
+  ],
+  "area": [
+    {
+      "xpos": 320,
+      "ypos": 310,
+      "width": 46,
+      "height": 33,
+      "type": "match"
+    }
+  ],
+  "properties": []
+}

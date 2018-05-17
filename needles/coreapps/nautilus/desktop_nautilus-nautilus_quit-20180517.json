@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "nautilus_quit"
+  ],
+  "area": [
+    {
+      "xpos": 397,
+      "ypos": 274,
+      "width": 75,
+      "height": 53,
+      "type": "match"
+    }
+  ],
+  "properties": []
+}

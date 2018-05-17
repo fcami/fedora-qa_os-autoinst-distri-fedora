@@ -1,0 +1,15 @@
+{
+  "tags": [
+    "rename_dialogue"
+  ],
+  "area": [
+    {
+      "xpos": 407,
+      "ypos": 315,
+      "width": 52,
+      "height": 15,
+      "type": "match"
+    }
+  ],
+  "properties": []
+}

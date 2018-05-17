@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 270,
+      "ypos": 160,
+      "width": 108,
+      "height": 19,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "directory_line"
+  ],
+  "properties": []
+}

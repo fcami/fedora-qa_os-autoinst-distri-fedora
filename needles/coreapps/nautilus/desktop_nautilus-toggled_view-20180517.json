@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "area": [
+    {
+      "xpos": 244,
+      "ypos": 160,
+      "width": 126,
+      "height": 37,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "toggled_view"
+  ]
+}

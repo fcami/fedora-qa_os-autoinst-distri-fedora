@@ -1,0 +1,15 @@
+{
+  "area": [
+    {
+      "xpos": 31,
+      "ypos": 447,
+      "width": 32,
+      "height": 40,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "nautilus_launcher"
+  ],
+  "properties": []
+}
