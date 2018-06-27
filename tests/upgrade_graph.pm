@@ -15,7 +15,7 @@ sub run {
     script_run "su --login test";
 
     # switch back to the graphics
-    send_key "ctrl-alt-f2";
+    send_key "ctrl-alt-f1";
     
     # DELETE ME, check only
     script_run "echo \"I wish I did not see this.\"";
