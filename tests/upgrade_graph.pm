@@ -16,10 +16,14 @@ sub run {
 
     # switch back to the graphics
     send_key "ctrl-alt-f1";
-    
-    # DELETE ME, check only
-    script_run "echo \"I wish I did not see this.\"";
 
+    # login onto the system
+    assert_screen "graphical_login_input";
+    my $password = get_var("USER_PASSWORD", "weakpassword");
+    type_very_safely $password;
+    send_key "ret";
+    
+    
     # handle bootloader, if requested; set longer timeout as sometimes
     # reboot here seems to take a long time
     if (get_var("GRUB_POSTINSTALL")) {
