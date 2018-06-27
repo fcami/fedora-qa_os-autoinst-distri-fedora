@@ -10,8 +10,16 @@ sub run {
     if ($release eq "rawhide") {
         $relnum = get_var("RAWREL", "rawhide");
     }
+    
+    # log as the test user
+    script_run "su --login test"
+
+    # switch back to the graphics
+    send_key "ctrl-alt-f2"
+
     # disable screen blanking (download can take a long time)
     script_run "setterm -blank 0";
+    
 
 
     # handle bootloader, if requested; set longer timeout as sometimes
