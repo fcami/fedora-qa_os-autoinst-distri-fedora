@@ -26,7 +26,10 @@ sub run {
     send_key "ret";
 
     # Check the screen and run Gnome Software
-    assert_screen "graphical_desktop_clean"
+    assert_screen "graphical_desktop_clean";
+    send_key "alt-f1";
+    wait_still_screen 2; # wait to end animation
+    assert_and_click "overview_package_tool_icon";
     
     
     # handle bootloader, if requested; set longer timeout as sometimes

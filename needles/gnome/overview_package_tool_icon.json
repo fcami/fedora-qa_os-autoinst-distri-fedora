@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "overview_package_tool_icon"
+  ],
+  "area": [
+    {
+      "xpos": 32,
+      "ypos": 585,
+      "width": 32,
+      "height": 28,
+      "type": "match"
+    }
+  ]
+}
