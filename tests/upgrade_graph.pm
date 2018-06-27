@@ -19,7 +19,7 @@ sub run {
 
     # login onto the system
     send_key "ret";
-    assert_screen "graphical_login_input";
+    # assert_screen "graphical_login_input";
     my $password = get_var("USER_PASSWORD", "weakpassword");
     type_very_safely $password;
     send_key "ret";
