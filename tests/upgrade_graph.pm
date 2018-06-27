@@ -16,11 +16,9 @@ sub run {
 
     # switch back to the graphics
     send_key "ctrl-alt-f2";
-
-    # disable screen blanking (download can take a long time)
-    script_run "setterm -blank 0";
     
-
+    # DELETE ME, check only
+    script_run "echo \"I wish I did not see this.\"";
 
     # handle bootloader, if requested; set longer timeout as sometimes
     # reboot here seems to take a long time
