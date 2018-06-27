@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "graphical_login_input"
+  ],
+  "area": [
+    {
+      "xpos": 341,
+      "ypos": 372,
+      "width": 85,
+      "height": 67,
+      "type": "match"
+    }
+  ]
+}
