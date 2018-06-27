@@ -24,6 +24,9 @@ sub run {
     my $password = get_var("USER_PASSWORD", "weakpassword");
     type_very_safely $password;
     send_key "ret";
+
+    # Check the screen and run Gnome Software
+    assert_screen "graphical_desktop_clean"
     
     
     # handle bootloader, if requested; set longer timeout as sometimes
