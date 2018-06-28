@@ -11,6 +11,7 @@ sub run {
     $self->root_console(tty=>3);
     assert_script_run 'dnf config-manager --set-disabled updates-testing';
     prepare_test_packages;
+    assert_script_run "su -c \"pkcon refresh force\" -s /bin/sh test"
     # get back to the desktop
     desktop_vt;
     # run the updater
