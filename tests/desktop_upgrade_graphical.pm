@@ -38,24 +38,19 @@ sub run {
             mouse_hide;
         }
     }
-    assert_and_click 'desktop_package_tool_update';
-    # if this is KDE and it had already noticed the notification, we
-    # will already have the apply button at this point
-    unless (check_screen 'desktop_package_tool_update_apply', 5) {
-        # refresh updates
-        assert_and_click 'desktop_package_tool_update_refresh', '', 240;
-    }
+    # a banner informs about new version, download it
+    assert_and_click 'desktop_package_tool_download';
+    
     # wait for refresh, then apply updates, using a C-style loop so we
     # can reset it if needed due to RHBZ #1314991
     for (my $n = 1; $n < 6; $n++) {
         # Check if we see the 'cancelled by user action' error we get
         # when #1314991 happens, if so, refresh and restart the loop
-        if (check_screen 'desktop_package_tool_update_bz1314991', 1) {
-            record_soft_failure "RHBZ #1314991 (background PK operation interfered with update)";
-            assert_and_click 'desktop_package_tool_update_refresh';
+        if (check_screen 'desktop_package_tool_install', 1) {
+            #sleep 100;
             $n = 1;
         }
-        last if (check_screen 'desktop_package_tool_update_apply', 120);
+        last if (assert_and_click 'desktop_package_tool_install', 120);
         mouse_set 10, 10;
         mouse_hide;
     }
