@@ -20,6 +20,7 @@ sub run {
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
+    assert_screen 'desktop_clean_gnome', 10;
     send_key 'alt-f1';
     wait_still_screen 2;
     assert_and_click 'overview_package_tool_icon';
