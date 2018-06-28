@@ -50,7 +50,7 @@ sub run {
     # will already have the apply button at this point
     unless (check_screen 'desktop_package_tool_update_apply', 5) {
         # refresh updates
-        click 'desktop_package_tool_update_refresh';
+        assert_and_click 'desktop_package_tool_update_refresh';
         wait_still_screen 20;
         assert_and_click 'desktop_package_tool_update_refresh', '', 120;
     }
