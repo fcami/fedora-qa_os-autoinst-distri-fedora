@@ -20,6 +20,7 @@ sub run {
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
+    wait_still_screen 5;
     menu_launch_type('update');
     
     # GNOME Software has a welcome screen, get rid of it if it shows
@@ -37,25 +38,23 @@ sub run {
         }
     }
     # a banner informs about new version, download it
-    assert_and_click 'desktop_package_tool_download';
-    
+    assert_and_click 'desktop_package_tool_download', 60;
+    wait_still_screen 5;
+    assert_and_click 'desktop_package_tool_install', 300;
+       
     # wait for refresh, then apply updates, using a C-style loop so we
     # can reset it if needed due to RHBZ #1314991
-    for (my $n = 1; $n < 6; $n++) {
+    #for (my $n = 1; $n < 6; $n++) {
         # Check if we see the 'cancelled by user action' error we get
         # when #1314991 happens, if so, refresh and restart the loop
-        if (check_screen 'desktop_package_tool_install', 1) {
             #sleep 100;
-            $n = 1;
-        }
-        last if (assert_and_click 'desktop_package_tool_install', 120);
-        mouse_set 10, 10;
-        mouse_hide;
-    }
-    # KDE annoyingly pops the notification up right over the install
-    # button, which doesn't help...wait for it to go away. Let's also
-    # wait on GNOME, as we've had tests fail at this point for no
-    # obvious reason, a wait may help.
+     #       $n = 1;
+     #   }
+     #   last if (assert_and_click 'desktop_package_tool_install', 120);
+     #   mouse_set 10, 10;
+     #   mouse_hide;
+    # }
+    
     wait_still_screen 5;
     assert_and_click 'desktop_package_tool_install';
     # on GNOME, wait for reboots.
