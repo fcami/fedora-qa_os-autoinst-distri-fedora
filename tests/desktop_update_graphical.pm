@@ -46,11 +46,12 @@ sub run {
     assert_and_click 'desktop_package_tool_update';
     # sometimes, refreshing does not work when clicked too soon
     #sleep 20;
-    wait_still_screen 20;
     # if this is KDE and it had already noticed the notification, we
     # will already have the apply button at this point
     unless (check_screen 'desktop_package_tool_update_apply', 5) {
         # refresh updates
+        click 'desktop_package_tool_update_refresh';
+        wait_still_screen 20;
         assert_and_click 'desktop_package_tool_update_refresh', '', 120;
     }
     # wait for refresh, then apply updates, using a C-style loop so we
