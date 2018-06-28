@@ -11,6 +11,8 @@ sub run {
     $self->root_console(tty=>3);
     assert_script_run 'dnf config-manager --set-disabled updates-testing';
     prepare_test_packages;
+    # sometimes, the test is failing because it cannot
+    # refresh packages for Gnome Software. Let's do it explicitely.
     assert_script_run "su -c \"pkcon refresh force\" -s /bin/sh test"
     # get back to the desktop
     desktop_vt;
