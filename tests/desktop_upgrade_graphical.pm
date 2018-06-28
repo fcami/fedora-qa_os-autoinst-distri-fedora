@@ -8,6 +8,8 @@ sub run {
     my $self = shift;
     my $desktop = get_var('DESKTOP');
     
+    desktop_vt;
+    
     # login onto the system
     assert_screen "graphical_login";
     send_key "ret";

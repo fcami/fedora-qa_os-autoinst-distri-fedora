@@ -39,6 +39,7 @@ sub run {
         }
     }
     assert_and_click 'desktop_package_tool_update';
+    # sometimes, refreshing does not work when clicked too soon
     sleep 20;
     # if this is KDE and it had already noticed the notification, we
     # will already have the apply button at this point
