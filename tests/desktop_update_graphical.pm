@@ -13,7 +13,7 @@ sub run {
     prepare_test_packages;
     # sometimes, the test is failing because it cannot
     # refresh packages for Gnome Software. Let's do it explicitely.
-    assert_script_run "su -c \"pkcon refresh force\" -s /bin/sh test";
+    script_run "su -c \"pkcon refresh force\" -s /bin/sh test", 60;
     # get back to the desktop
     desktop_vt;
     # run the updater
