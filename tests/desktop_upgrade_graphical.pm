@@ -20,8 +20,10 @@ sub run {
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
+    send_key 'alt-f1';
     wait_still_screen 5;
     menu_launch_type('update');
+    wait_still_screen 5;
     
     # GNOME Software has a welcome screen, get rid of it if it shows
     # up (but don't fail if it doesn't, we're not testing that)
@@ -38,7 +40,7 @@ sub run {
         }
     }
     # a banner informs about new version, download it
-    assert_and_click 'desktop_package_tool_download', 60;
+    assert_and_click 'desktop_package_tool_download', 300;
     wait_still_screen 5;
     assert_and_click 'desktop_package_tool_install', 300;
        
