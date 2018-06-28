@@ -43,7 +43,8 @@ sub run {
     # will already have the apply button at this point
     unless (check_screen 'desktop_package_tool_update_apply', 5) {
         # refresh updates
-        assert_and_click 'desktop_package_tool_update_refresh', '', 240;
+        sleep 30;
+        assert_and_click 'desktop_package_tool_update_refresh', '', 120;
     }
     # wait for refresh, then apply updates, using a C-style loop so we
     # can reset it if needed due to RHBZ #1314991

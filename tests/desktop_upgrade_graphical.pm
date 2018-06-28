@@ -7,23 +7,19 @@ use packagetest;
 sub run {
     my $self = shift;
     my $desktop = get_var('DESKTOP');
-    # use a tty console for repo config and package prep
-    $self->root_console(tty=>3);
-    assert_script_run 'dnf config-manager --set-disabled updates-testing';
-    prepare_test_packages;
-    # get back to the desktop
-    desktop_vt;
-    # run the updater
-    if ($desktop eq 'kde') {
-        # KDE team tells me the 'preferred' update method is the
-        # systray applet
-        assert_and_click 'desktop_expand_systray';
-    }
-    else {
-        # this launches GNOME Software on GNOME, dunno for any other
-        # desktop yet
-        menu_launch_type('update');
-    }
+    
+    # login onto the system
+    assert_screen "graphical_login";
+    send_key "ret";
+    assert_screen "graphical_login_input";
+    my $password = get_var("USER_PASSWORD", "weakpassword");
+    type_very_safely $password;
+    send_key "ret";
+
+    # this launches GNOME Software on GNOME, dunno for any other
+    # desktop yet
+    menu_launch_type('update');
+    
     # GNOME Software has a welcome screen, get rid of it if it shows
     # up (but don't fail if it doesn't, we're not testing that)
     if ($desktop eq 'gnome' && check_screen 'gnome_software_welcome', 10) {
@@ -59,7 +55,7 @@ sub run {
     # wait on GNOME, as we've had tests fail at this point for no
     # obvious reason, a wait may help.
     wait_still_screen 5;
-    assert_and_click 'desktop_package_tool_update_apply';
+    assert_and_click 'desktop_package_tool_install';
     # on GNOME, wait for reboots.
     if ($desktop eq 'gnome') {
         # handle reboot confirm screen which pops up when user is
