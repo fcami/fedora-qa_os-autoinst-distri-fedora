@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "desktop_package_tool_download"
+  ],
+  "area": [
+    {
+      "xpos": 814,
+      "ypos": 317,
+      "width": 71,
+      "height": 18,
+      "type": "match"
+    }
+  ]
+}
