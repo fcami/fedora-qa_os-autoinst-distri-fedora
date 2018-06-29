@@ -30,7 +30,7 @@ sub run {
     
     # the previous step checked the screen, now click on the update
     # button
-    assert_and_click 'desktop_package_tool_update', 20;
+    assert_and_click 'desktop_package_tool_update', 120;
     wait_still_screen 2;
     # a banner should inform about new version, download it
     assert_and_click 'desktop_package_tool_download', 300;
