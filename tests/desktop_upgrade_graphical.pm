@@ -27,6 +27,11 @@ sub run {
     #        mouse_hide;
     #    }
     #}
+
+    if (check_screen 'desktop_package_tool_thirdparty_enable', 10) {
+        assert_and_click 'desktop_package_tool_thirdparty_enable_cancel', 10;
+    }
+
     
     # the previous step checked the screen, now click on the update
     # button
