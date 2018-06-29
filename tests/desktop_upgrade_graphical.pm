@@ -27,9 +27,15 @@ sub run {
             mouse_hide;
         }
     }
-    # a banner informs about new version, download it
+    
+    # the previous step checked the screen, now click on the update
+    # button
+    assert_and_click 'desktop_package_tool_update', 20;
+    wait_still_screen 2;
+    # a banner should inform about new version, download it
     assert_and_click 'desktop_package_tool_download', 300;
     wait_still_screen 5;
+    # after the download, Install the updates
     assert_and_click 'desktop_package_tool_install', 300;
        
     # wait for refresh, then apply updates, using a C-style loop so we
