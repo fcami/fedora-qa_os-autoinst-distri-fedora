@@ -25,8 +25,10 @@ sub run {
         }
         $wait_time = 300;
     }
-    # Wait for the login screen
-    boot_to_login_screen(timeout => $wait_time);
+    # Wait for the login screen unless it is not already booted
+    unless (get_var("ASSUME_BOOT")) { 
+        boot_to_login_screen(timeout => $wait_time);
+    }
     # GDM 3.24.1 dumps a cursor in the middle of the screen here...
     mouse_hide;
     # do user login unless USER_LOGIN is set to string 'false'

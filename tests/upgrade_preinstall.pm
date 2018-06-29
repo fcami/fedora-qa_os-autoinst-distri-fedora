@@ -26,6 +26,9 @@ sub run {
     assert_script_run $update_command, 600;
 }
 
+if (get_var("ASSUME_BOOT")) {
+    desktop_vt;
+}
 
 sub test_flags {
     return { fatal => 1 };
