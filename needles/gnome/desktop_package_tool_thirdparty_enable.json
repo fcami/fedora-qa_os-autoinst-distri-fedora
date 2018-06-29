@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "desktop_package_tool_thirdparty_enable"
+  ],
+  "area": [
+    {
+      "xpos": 903,
+      "ypos": 110,
+      "width": 52,
+      "height": 19,
+      "type": "match"
+    }
+  ]
+}

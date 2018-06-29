@@ -1,0 +1,16 @@
+{
+  "tags": [
+    "DESKTOP-gnome",
+    "desktop_package_tool_thirdparty_enable_cancel"
+  ],
+  "area": [
+    {
+      "xpos": 993,
+      "ypos": 112,
+      "width": 17,
+      "height": 15,
+      "type": "match"
+    }
+  ],
+  "properties": []
+}
