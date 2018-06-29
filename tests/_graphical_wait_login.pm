@@ -25,7 +25,8 @@ sub run {
         }
         $wait_time = 300;
     }
-    # Wait for the login screen unless it is not already booted
+    # Wait for the login screen. If the machine is already booted, then skip this test
+    # and proceed to log in the system and click through the set up.
     unless (get_var("ASSUME_BOOT") == 1) { 
         boot_to_login_screen(timeout => $wait_time);
     }

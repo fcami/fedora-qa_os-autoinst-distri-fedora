@@ -25,6 +25,9 @@ sub run {
     my $update_command = 'dnf -y install dnf-plugin-system-upgrade';
     assert_script_run $update_command, 600;
 
+    # I want to use this test in a suite where it is not followed by a console based module,
+    # but rather a graphical screen. Therefore, if a booted system with login screen 
+    # is required, switch to graphical terminal.
     if (get_var("ASSUME_BOOT",0) == 1) {
         desktop_vt;
     }
