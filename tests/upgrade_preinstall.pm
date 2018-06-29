@@ -24,11 +24,12 @@ sub run {
 
     my $update_command = 'dnf -y install dnf-plugin-system-upgrade';
     assert_script_run $update_command, 600;
+
+    if (get_var("ASSUME_BOOT",0) == 1) {
+        desktop_vt;
+    }
 }
 
-if (get_var("ASSUME_BOOT",0) == 1) {
-    desktop_vt;
-}
 
 sub test_flags {
     return { fatal => 1 };
