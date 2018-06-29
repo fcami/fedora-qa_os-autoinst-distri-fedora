@@ -8,15 +8,6 @@ sub run {
     my $self = shift;
     my $desktop = get_var('DESKTOP');
     
-    #desktop_vt;
-    
-    # login onto the system
-    assert_screen "graphical_login";
-    send_key "ret";
-    assert_screen "graphical_login_input";
-    my $password = get_var("USER_PASSWORD", "weakpassword");
-    type_very_safely $password;
-    send_key "ret";
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
