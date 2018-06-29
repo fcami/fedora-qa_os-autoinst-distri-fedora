@@ -26,7 +26,7 @@ sub run {
     assert_script_run $update_command, 600;
 }
 
-if (get_var("ASSUME_BOOT")) {
+if (get_var("ASSUME_BOOT") == 1) {
     desktop_vt;
 }
 
