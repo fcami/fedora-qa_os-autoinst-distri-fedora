@@ -20,7 +20,7 @@ sub run {
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
-    assert_screen 'desktop_clean_gnome', 10;
+    assert_screen 'graphical_desktop_clean', 10;
     send_key 'alt-f1';
     wait_still_screen 2;
     assert_and_click 'overview_package_tool_icon';
@@ -58,8 +58,6 @@ sub run {
      #   mouse_hide;
     # }
     
-    wait_still_screen 5;
-    assert_and_click 'desktop_package_tool_install';
     # on GNOME, wait for reboots.
     if ($desktop eq 'gnome') {
         # handle reboot confirm screen which pops up when user is
