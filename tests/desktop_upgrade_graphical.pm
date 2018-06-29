@@ -20,11 +20,7 @@ sub run {
 
     # this launches GNOME Software on GNOME, dunno for any other
     # desktop yet
-    assert_screen 'graphical_desktop_clean', 10;
-    send_key 'alt-f1';
-    wait_still_screen 2;
-    assert_and_click 'overview_package_tool_icon';
-    wait_still_screen 5;
+    menu_launch_type('update');
     
     # GNOME Software has a welcome screen, get rid of it if it shows
     # up (but don't fail if it doesn't, we're not testing that)
