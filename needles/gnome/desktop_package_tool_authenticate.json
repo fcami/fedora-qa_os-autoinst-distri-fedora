@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "DESKTOP-gnome",
+    "desktop_package_tool_authenticate"
+  ],
+  "area": [
+    {
+      "xpos": 594,
+      "ypos": 522,
+      "width": 88,
+      "height": 17,
+      "type": "match"
+    }
+  ]
+}
