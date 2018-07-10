@@ -35,13 +35,13 @@ sub run {
     
     # the previous step checked the screen, now click on the update
     # button
-    assert_and_click 'desktop_package_tool_update', 120;
+    assert_and_click 'desktop_package_tool_update','left', 120;
     wait_still_screen 2;
     # a banner should inform about new version, download it
-    assert_and_click 'desktop_package_tool_download', 300;
+    assert_and_click 'desktop_package_tool_download','left', 300;
     wait_still_screen 5;
     # after the download, Install the updates
-    assert_and_click 'desktop_package_tool_install', 300;
+    assert_and_click 'desktop_package_tool_install','left', 300;
        
     # wait for refresh, then apply updates, using a C-style loop so we
     # can reset it if needed due to RHBZ #1314991
