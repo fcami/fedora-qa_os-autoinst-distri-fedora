@@ -61,12 +61,13 @@ sub run {
         # handle reboot confirm screen which pops up when user is
         # logged in (but don't fail if it doesn't as we're not testing
         # that)
-        if (check_screen 'gnome_reboot_confirm', 15) {
-            # on F27+, default is Cancel, earlier, default is Restart
-            my $version = lc(get_var("VERSION"));
-            send_key 'tab' if ($version eq 'rawhide' || $version > 26);
-            send_key 'ret';
-        }
+        
+        if match_has_tag('desktop_package_tool_password'){
+            type_very_safely(get_var('USER_PASSWORD','weakpassword'));
+            assert_and_click('desktop_package_tool_authenticate','',30);
+        } 
+
+
         boot_to_login_screen;
     }
     else {
