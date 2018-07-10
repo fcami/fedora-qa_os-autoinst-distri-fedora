@@ -65,8 +65,9 @@ sub run {
         if match_has_tag('desktop_package_tool_password'){
             type_very_safely(get_var('USER_PASSWORD','weakpassword'));
             assert_and_click('desktop_package_tool_authenticate','',30);
-        } 
+        }
 
+        assert_and_click('desktop_package_tool_restart','',30); 
 
         boot_to_login_screen;
     }
