@@ -39,7 +39,7 @@ sub run {
     assert_and_click 'desktop_package_tool_update','left', 120;
     wait_still_screen 2;
     # a banner should inform about new version, download it
-    assert_and_click 'desktop_package_tool_download','left', 300;
+    assert_and_click 'desktop_package_tool_download','left', 1800;
     wait_still_screen 5;
     # after the download, Install the updates
     assert_and_click 'desktop_package_tool_install','left', 300;
