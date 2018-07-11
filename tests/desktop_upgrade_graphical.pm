@@ -28,9 +28,10 @@ sub run {
     #    }
     #}
 
-    if (match_has_tag('desktop_package_tool_thirdparty_enable', 10)) {
+    if (check_screen('desktop_package_tool_thirdparty_enable', 10)) {
         assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 10;
     }
+    wait_still_screen 2;
 
     
     # the previous step checked the screen, now click on the update
