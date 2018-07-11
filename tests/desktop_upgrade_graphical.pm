@@ -28,7 +28,7 @@ sub run {
     #    }
     #}
 
-    if (match_has_tag 'desktop_package_tool_thirdparty_enable', 10) {
+    if (match_has_tag('desktop_package_tool_thirdparty_enable', 10)) {
         assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 10;
     }
 
@@ -62,7 +62,7 @@ sub run {
         # logged in (but don't fail if it doesn't as we're not testing
         # that)
         
-        if match_has_tag('desktop_package_tool_password'){
+        if (match_has_tag('desktop_package_tool_password')){
             type_very_safely(get_var('USER_PASSWORD','weakpassword'));
             assert_and_click('desktop_package_tool_authenticate','',30);
         }
