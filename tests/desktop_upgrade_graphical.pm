@@ -28,8 +28,8 @@ sub run {
     #    }
     #}
 
-    if (check_screen 'desktop_package_tool_thirdparty_enable', 10) {
-        assert_and_click 'desktop_package_tool_thirdparty_enable_cancel', 10;
+    if (match_has_tag 'desktop_package_tool_thirdparty_enable', 10) {
+        assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 10;
     }
 
     
