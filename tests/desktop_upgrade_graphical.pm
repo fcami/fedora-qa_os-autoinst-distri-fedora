@@ -63,10 +63,8 @@ sub run {
         # logged in (but don't fail if it doesn't as we're not testing
         # that)
         
-        if (check_screen('desktop_package_tool_password')){
-            type_very_safely(get_var('USER_PASSWORD','weakpassword'));
-            assert_and_click('desktop_package_tool_authenticate','',30);
-        }
+       type_very_safely(get_var('USER_PASSWORD','weakpassword'));
+       assert_and_click('desktop_package_tool_authenticate','',30);
 
         assert_and_click('desktop_package_tool_restart','',30); 
 
