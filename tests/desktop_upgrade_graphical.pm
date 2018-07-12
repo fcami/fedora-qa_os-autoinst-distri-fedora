@@ -28,7 +28,7 @@ sub run {
     #    }
     #}
 
-    if (check_screen('desktop_package_tool_thirdparty_enable', 10)) {
+    if (check_screen('desktop_package_tool_thirdparty_enable', 60)) {
         assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 10;
     }
     wait_still_screen 2;
@@ -36,7 +36,7 @@ sub run {
     
     # the previous step checked the screen, now click on the update
     # button
-    assert_and_click 'desktop_package_tool_update','left', 120;
+    assert_and_click 'desktop_package_tool_update','left', 360;
     wait_still_screen 2;
     # a banner should inform about new version, download it
     assert_and_click 'desktop_package_tool_download','left', 1800;
