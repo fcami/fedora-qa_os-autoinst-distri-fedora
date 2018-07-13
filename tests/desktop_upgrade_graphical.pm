@@ -18,15 +18,15 @@ sub run {
     if ($desktop eq 'gnome' && check_screen 'gnome_software_welcome', 10) {
         send_key 'ret';
     }
-    ## go to the 'update' interface. For GNOME, we may be waiting
-    ## some time at a 'Software catalog is being loaded' screen.
-    #if ($desktop eq 'gnome') {
-    #    for my $n (1..5) {
-    #        last if (check_screen 'desktop_package_tool_update', 120);
-    #        mouse_set 10, 10;
-    #        mouse_hide;
-    #    }
-    #}
+    # go to the 'update' interface. For GNOME, we may be waiting
+    # some time at a 'Software catalog is being loaded' screen.
+    if ($desktop eq 'gnome') {
+        for my $n (1..5) {
+            last if (check_screen 'desktop_package_tool_update', 120);
+            mouse_set 10, 10;
+            mouse_hide;
+        }
+    }
     
     # If a banner appears that offers enablement of third party, discard it.
     if (check_screen('desktop_package_tool_thirdparty_enable', 60)) {
