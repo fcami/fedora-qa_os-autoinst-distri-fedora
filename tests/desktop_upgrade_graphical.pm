@@ -27,16 +27,16 @@ sub run {
     #        mouse_hide;
     #    }
     #}
-
+    
+    # If a banner appears that offers enablement of third party, discard it.
     if (check_screen('desktop_package_tool_thirdparty_enable', 60)) {
-        assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 10;
+        assert_and_click 'desktop_package_tool_thirdparty_enable_cancel','left', 30;
     }
     wait_still_screen 2;
 
     
-    # the previous step checked the screen, now click on the update
-    # button
-    assert_and_click 'desktop_package_tool_update','left', 360;
+    # now click on the update button
+    assert_and_click 'desktop_package_tool_update','left', 120;
     wait_still_screen 2;
     # a banner should inform about new version, download it
     assert_and_click 'desktop_package_tool_download','left', 1800;
@@ -59,16 +59,14 @@ sub run {
     
     # on GNOME, wait for reboots.
     if ($desktop eq 'gnome') {
-        # handle reboot confirm screen which pops up when user is
-        # logged in (but don't fail if it doesn't as we're not testing
-        # that)
+        # handle reboot confirm screen which pops up
         
        type_very_safely(get_var('USER_PASSWORD','weakpassword'));
-       assert_and_click('desktop_package_tool_authenticate','',30);
+       assert_and_click('desktop_package_tool_authenticate','',60);
 
-        assert_and_click('desktop_package_tool_restart','',30); 
+       assert_and_click('desktop_package_tool_restart','',30); 
 
-        boot_to_login_screen;
+       boot_to_login_screen;
     }
     else {
         # KDE will prompt for authentication if any package is not
