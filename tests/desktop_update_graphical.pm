@@ -9,7 +9,15 @@ sub run {
     my $desktop = get_var('DESKTOP');
     # use a tty console for repo config and package prep
     $self->root_console(tty=>3);
+    # TEST TEST let's get some debuggin' action in
+    assert_script_run "sed -i -e 's,packagekitd,packagekitd --verbose,g' /usr/lib/systemd/system/packagekit.service";
+    assert_script_run "systemctl daemon-reload";
+    assert_script_run "systemctl restart packagekit.service";
     assert_script_run 'dnf config-manager --set-disabled updates-testing';
+    # TEST TEST hacked-up gnome-software
+    if (get_var("VERSION") eq "28" && get_var("ARCH") eq "x86_64") {
+        assert_script_run "dnf -y update https://kojipkgs.fedoraproject.org//work/tasks/8041/30188041/gnome-software-3.28.2-3.8.fc28.x86_64.rpm";
+    }
     prepare_test_packages;
     # get back to the desktop
     desktop_vt;
@@ -22,8 +30,15 @@ sub run {
     else {
         # this launches GNOME Software on GNOME, dunno for any other
         # desktop yet
-        sleep 3;
-        menu_launch_type('update');
+        #sleep 3;
+        #menu_launch_type('update');
+        # TEST TEST ok let's not do that let's do this to run with
+        # --verbose, stolen from desktop_terminal
+        menu_launch_type('terminal');
+        wait_still_screen 5;
+        type_string "killall gnome-software\n", 20;
+        sleep 5;
+        type_string "gnome-software --verbose > /home/test/gs.log 2>&1\n", 20;
     }
     # GNOME Software has a welcome screen, get rid of it if it shows
     # up (but don't fail if it doesn't, we're not testing that)
@@ -112,6 +127,8 @@ sub run {
     # back to console to verify updates
     $self->root_console(tty=>3);
     verify_updated_packages;
+    # TEST TEST we need logs from a success case...
+    $self->post_fail_hook();
 }
 
 sub test_flags {

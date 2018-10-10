@@ -62,6 +62,8 @@ sub post_fail_hook {
 
     # Sometimes useful for diagnosing FreeIPA issues
     upload_logs "/etc/nsswitch.conf", failok=>1;
+    # TEST TEST gs debugging
+    upload_logs "/home/test/gs.log", failok=>1;
 }
 
 1;
