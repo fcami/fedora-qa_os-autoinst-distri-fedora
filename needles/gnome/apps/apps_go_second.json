@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "apps_go_second"
+  ],
+  "area": [
+    {
+      "xpos": 987,
+      "ypos": 423,
+      "width": 19,
+      "height": 20,
+      "type": "match"
+    }
+  ]
+}

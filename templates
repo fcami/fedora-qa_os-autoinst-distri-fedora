@@ -580,6 +580,17 @@
                     },
                     {
                       machine    => { name => "64bit" },
+                      prio       => 40,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "Workstation-live-iso",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "gnomeapps_startstop" },
+                    },
+                    {
+                      machine    => { name => "64bit" },
                       prio       => 32,
                       product    => {
                                       arch    => "x86_64",
@@ -5569,6 +5580,15 @@
                       name => "desktop_notifications_postinstall",
                       settings => [
                         { key => "ENTRYPOINT", value => "desktop_notifications" },
+                        { key => "START_AFTER_TEST", value => "install_default_upload" },
+                        { key => "BOOTFROM", value => "c" },
+                        { key => "HDD_1", value => "disk_%FLAVOR%_%MACHINE%.qcow2" },
+                      ],
+                    },
+                    {
+                      name => "gnomeapps_startstop",
+                      settings => [
+                        { key => "ENTRYPOINT", value => "_graphical_wait_login apps_terminal apps_abrt apps_archiver apps_boxes apps_calculator apps_calendar apps_chars apps_cheese apps_clocks apps_contacts apps_disks apps_diskusage apps_documents apps_dviewer apps_evolution apps_files apps_firefox apps_fonts apps_help apps_imageviewer apps_lcalc apps_ldraw apps_limpress apps_logs apps_lwriter apps_maps apps_monitor apps_photos apps_rhythmbox apps_scan apps_screenshot apps_settings apps_software apps_texteditor apps_videos apps_weather" },
                         { key => "START_AFTER_TEST", value => "install_default_upload" },
                         { key => "BOOTFROM", value => "c" },
                         { key => "HDD_1", value => "disk_%FLAVOR%_%MACHINE%.qcow2" },
