@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "area": [
+    {
+      "xpos": 198,
+      "ypos": 211,
+      "width": 29,
+      "height": 14,
+      "type": "match"
+    }
+  ],
+  "tags": [
+    "terminal_command_success"
+  ]
+}
