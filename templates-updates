@@ -403,6 +403,18 @@
                       test_suite => { name => "install_default_update" },
                     },
                     {
+                      group_name => "Fedora Updates",
+                      machine    => { name => "uefi" },
+                      prio       => 41,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "updates-installer",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "install_default_update" },
+                    },
+                    {
                       group_name => "Fedora PowerPC Updates",
                       machine    => { name => "ppc64le" },
                       prio       => 40,
@@ -1002,7 +1014,7 @@
                         { key => "PACKAGE_SET", value => "default" },
                         { key => "PARALLEL_WITH", value => "support_server" },
                         { key => "ADD_REPOSITORY_VARIATION", value => "nfs://10.0.2.110:/opt/update_repo" },
-                        { key => "+START_AFTER_TEST", value => "installer_build" },
+                        { key => "+START_AFTER_TEST", value => "installer_build:%ARCH_BASE_MACHINE%" },
                         { key => "WORKER_CLASS", value => "tap" },
                       ],
                     },
