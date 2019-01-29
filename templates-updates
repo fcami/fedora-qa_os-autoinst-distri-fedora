@@ -368,6 +368,18 @@
                     },
                     {
                       group_name => "Fedora Updates",
+                      machine    => { name => "uefi" },
+                      prio       => 41,
+                      product    => {
+                                      arch    => "x86_64",
+                                      distri  => "fedora",
+                                      flavor  => "updates-server",
+                                      version => "*",
+                                    },
+                      test_suite => { name => "advisory_boot" },
+                    },
+                    {
+                      group_name => "Fedora Updates",
                       machine    => { name => "64bit" },
                       prio       => 40,
                       product    => {
