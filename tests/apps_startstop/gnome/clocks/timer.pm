@@ -8,7 +8,7 @@ use utils;
 sub run {
     my $self = shift;
     # Click on Timer
-    assert_and_click 'clocks_button_stopwatch';
+    assert_and_click 'clocks_button_timer';
     wait_still_screen 2;
     # Start timer
     assert_and_click 'clocks_button_start';
