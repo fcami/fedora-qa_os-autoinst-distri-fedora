@@ -765,6 +765,21 @@ sub start_with_launcher {
         assert_and_click $launcher;
         wait_still_screen 5;
     } 
+    elsif ($desktop eq 'xfce') {
+        # Click on the XFCE menu applications
+        assert_and_click 'xfce_menu_launcher';
+        wait_still_screen 2;
+
+        # If the application icon is in a group, click on group first
+        if ($group) {
+            assert_and_click $group;
+            wait_still_screen 2;
+        }
+
+        # Click on the application icon
+        assert_and_click $launcher;
+        wait_still_screen 5;
+    }
 }
 
 
