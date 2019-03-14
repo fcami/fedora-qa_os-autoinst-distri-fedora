@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_alarm_added"
+  ],
+  "area": [
+    {
+      "xpos": 107,
+      "ypos": 337,
+      "width": 71,
+      "height": 37,
+      "type": "match"
+    }
+  ]
+}

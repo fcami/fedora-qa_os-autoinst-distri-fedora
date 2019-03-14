@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_check_minute"
+  ],
+  "area": [
+    {
+      "xpos": 456,
+      "ypos": 365,
+      "width": 97,
+      "height": 56,
+      "type": "match"
+    }
+  ]
+}

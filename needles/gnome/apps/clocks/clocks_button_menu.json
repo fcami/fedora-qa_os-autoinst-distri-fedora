@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_button_menu"
+  ],
+  "area": [
+    {
+      "xpos": 944,
+      "ypos": 43,
+      "width": 16,
+      "height": 16,
+      "type": "match"
+    }
+  ]
+}

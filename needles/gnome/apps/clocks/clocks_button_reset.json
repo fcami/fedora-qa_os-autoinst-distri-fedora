@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_button_reset"
+  ],
+  "area": [
+    {
+      "xpos": 400,
+      "ypos": 462,
+      "width": 52,
+      "height": 22,
+      "type": "match"
+    }
+  ]
+}

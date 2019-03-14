@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_button_delete"
+  ],
+  "area": [
+    {
+      "xpos": 956,
+      "ypos": 737,
+      "width": 48,
+      "height": 17,
+      "type": "match"
+    }
+  ]
+}

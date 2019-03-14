@@ -1,0 +1,15 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_check_treset"
+  ],
+  "area": [
+    {
+      "xpos": 477,
+      "ypos": 366,
+      "width": 74,
+      "height": 53,
+      "type": "match"
+    }
+  ]
+}

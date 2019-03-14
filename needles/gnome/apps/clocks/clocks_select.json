@@ -1,0 +1,16 @@
+{
+  "properties": [],
+  "tags": [
+    "clocks_select_clock",
+    "clocks_select"
+  ],
+  "area": [
+    {
+      "xpos": 901,
+      "ypos": 42,
+      "width": 19,
+      "height": 17,
+      "type": "match"
+    }
+  ]
+}
