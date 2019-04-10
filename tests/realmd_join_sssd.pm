@@ -54,7 +54,7 @@ sub run {
         assert_script_run "systemctl restart firewalld.service";
 
         # deploy as a replica
-        my $args = "--setup-dns --setup-ca --allow-zone-overlap -U --principal admin --admin-password monkeys123";
+        my $args = "--setup-dns --setup-ca --setup-kra --allow-zone-overlap -U --principal admin --admin-password monkeys123";
         for my $fwd (@forwards) {
             $args .= " --forwarder=$fwd";
         }
